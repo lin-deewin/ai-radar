@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 本地数据与日报（按需取消注释提交样例）
+data/*.db
+data/*.log
+reports/*.md
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# 环境变量 / 密钥
+.env
+*.secret

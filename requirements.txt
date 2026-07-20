@@ -1,0 +1,5 @@
+httpx[socks]>=0.27
+feedparser>=6.0
+PyYAML>=6.0
+fastapi>=0.110
+uvicorn>=0.27

@@ -1,0 +1,153 @@
+# AI Radar 数据源配置
+# authority: 0.0~1.0 源权威权重
+# tags: 主题分类，用于过滤 ai / hardware
+# lang: 语言，用于摘要/分组
+
+# ===== 采集调度 =====
+schedule:
+  arxiv_interval_minutes: 60
+  rss_interval_minutes: 15
+  lookback_hours: 72          # 默认回溯窗口（覆盖周末）
+
+# ===== 评分权重 =====
+ranking:
+  authority: 0.35
+  recency: 0.25
+  engagement: 0.20
+  novelty: 0.20
+  recency_half_life_hours: 72
+
+# ===== arXiv =====
+arxiv:
+  categories:
+    - cs.AI
+    - cs.LG
+    - cs.CL
+    - cs.AR        # Hardware Architecture -> tag=hardware
+    - cs.PF        # Performance -> tag=hardware
+    - cs.DC        # Distributed Computing -> tag=hardware
+  max_results: 200
+  authority: 0.9
+  lang: en        # tag 按类别动态判定，见 collectors/arxiv.py
+
+# ===== Hugging Face Daily Papers =====
+hf_papers:
+  url: "https://huggingface.co/api/daily_papers"
+  authority: 0.95
+  tags: ["ai"]
+  lang: en
+
+# ===== RSS / 博客 / 社区 =====
+rss_sources:
+  - name: "OpenAI Blog"
+    url: "https://openai.com/news/rss.xml"
+    authority: 1.0
+    tags: ["ai"]
+    lang: en
+
+  - name: "Anthropic News"
+    url: "https://www.anthropic.com/news/rss.xml"
+    authority: 1.0
+    tags: ["ai"]
+    lang: en
+    enabled: false          # 官方 RSS 不存在；待接 RSSHub /anthropic/news
+
+  - name: "Google Research Blog"
+    url: "https://research.google/blog/rss/"
+    authority: 0.95
+    tags: ["ai"]
+    lang: en
+
+  - name: "DeepMind Blog"
+    url: "https://deepmind.google/blog/rss.xml"
+    authority: 0.95
+    tags: ["ai"]
+    lang: en
+
+  - name: "Meta AI Blog"
+    url: "https://ai.meta.com/blog/rss/"
+    authority: 0.9
+    tags: ["ai"]
+    lang: en
+    enabled: false          # 官方 RSS 已下线(404)，待接 RSSHub
+
+  - name: "Microsoft Research Blog"
+    url: "https://www.microsoft.com/en-us/research/feed/"
+    authority: 0.9
+    tags: ["ai"]
+    lang: en
+
+  - name: "Sebastian Raschka - Ahead of AI"
+    url: "https://magazine.sebastianraschka.com/feed"
+    authority: 0.85
+    tags: ["ai"]
+    lang: en
+
+  - name: "Lil'Log - Lilian Weng"
+    url: "https://lilianweng.github.io/index.xml"
+    authority: 0.9
+    tags: ["ai"]
+    lang: en
+
+  - name: "Hacker News (AI)"
+    url: "https://hnrss.org/newest?q=AI+OR+LLM+OR+GPT+OR+transformer&points=50"
+    authority: 0.5
+    tags: ["ai"]
+    lang: en
+
+  - name: "Hacker News (GPU/Hardware)"
+    url: "https://hnrss.org/newest?q=GPU+OR+chip+OR+NVIDIA+OR+AMD+OR+semiconductor&points=30"
+    authority: 0.5
+    tags: ["hardware"]
+    lang: en
+
+  - name: "r/LocalLLaMA top"
+    url: "https://www.reddit.com/r/LocalLLaMA/top/.rss?t=day&limit=25"
+    authority: 0.55
+    tags: ["ai"]
+    lang: en
+
+  - name: "r/MachineLearning top"
+    url: "https://www.reddit.com/r/MachineLearning/top/.rss?t=day&limit=25"
+    authority: 0.6
+    tags: ["ai"]
+    lang: en
+
+  - name: "机器之心"
+    url: "https://rsshub.app/jiqizhixin"
+    authority: 0.7
+    tags: ["ai"]
+    lang: zh
+    enabled: false          # 原生 RSS XML 破损；改用 RSSHub，需自建实例后启用
+
+  - name: "量子位"
+    url: "https://www.qbitai.com/feed"
+    authority: 0.65
+    tags: ["ai"]
+    lang: zh
+
+  - name: "智源社区"
+    url: "https://hub.baai.ac.cn/feed"
+    authority: 0.7
+    tags: ["ai"]
+    lang: zh
+    enabled: false          # 原生 feed 404；待接 RSSHub
+
+  - name: "PaperWeekly"
+    url: "https://paperweekly.site/rss"
+    authority: 0.6
+    tags: ["ai"]
+    lang: zh
+    enabled: false          # SSL 异常；待确认
+
+  - name: "Chips and Cheese"
+    url: "https://chipsandcheese.com/feed/"
+    authority: 0.85
+    tags: ["hardware"]
+    lang: en
+
+  - name: "ServeTheHome"
+    url: "https://www.servethehome.com/feed/"
+    authority: 0.75
+    tags: ["hardware"]
+    lang: en
