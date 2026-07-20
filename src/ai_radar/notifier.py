@@ -1,22 +1,21 @@
 """微信推送通知。支持多渠道，配一个 token 即可启用。
 
 渠道:
-  1) wxpusher    - WxPusher，免费、不实名、微信扫码订阅，无明确条数限制
-     注册: https://wxpusher.zjiecode.com/ → 注册 → 创建应用拿 appToken
-     订阅: 用应用二维码让微信扫码订阅 → 拿到 uid
+  1) wxpusher_spt - WxPusher 极简推送，扫码拿 SPT 即可给自己发，无需建应用/订阅
+     获取: https://wxpusher.zjiecode.com/spt 扫码 → 复制 SPT 字符串
+     配置: AI_RADAR_WXPUSHER_SPT=SPT_xxxxxxxxx
+  2) wxpusher    - WxPusher 标准推送，需 appToken + uid 且 uid 已订阅该应用
+     注册: https://wxpusher.zjiecode.com/ → 创建应用拿 appToken → 微信扫码订阅拿 uid
      配置: AI_RADAR_WXPUSHER_APP_TOKEN=AT_xxx
            AI_RADAR_WXPUSHER_UID=UID_xxx
-  2) serverchan  - Server 酱 Turbo，微信扫码绑定即可，免费 5 条/天
-     注册: https://sct.ftqq.com/  → 登录拿 SENDKEY
+  3) serverchan  - Server 酱 Turbo，微信扫码绑定即可，免费 5 条/天
      配置: AI_RADAR_SERVERCHAN_KEY=<SENDKEY>
-  3) pushplus    - PushPlus，微信扫码绑定，免费 200 条/天
-     注册: http://www.pushplus.plus/ → 登录拿 token
+  4) pushplus    - PushPlus，微信扫码绑定，免费 200 条/天
      配置: AI_RADAR_PUSHPLUS_TOKEN=<token>
-  4) wecom_bot   - 企业微信群机器人（个人版也行），免费无限制
-     建一个企业微信群 → 群设置 → 添加机器人 → 拿到 webhook key
+  5) wecom_bot   - 企业微信群机器人，免费无限制
      配置: AI_RADAR_WECOM_BOT_KEY=<key>
 
-环境变量优先；也可在 config/notifier.yaml 配置。
+环境变量优先。
 """
 from __future__ import annotations
 
@@ -69,12 +68,15 @@ class Notifier:
     """按已配置的渠道推送，多渠道可同时启用。"""
 
     def __init__(self,
+                 wxpusher_spt: str | None = None,
                  wxpusher_app_token: str | None = None,
                  wxpusher_uid: str | None = None,
                  serverchan_key: str | None = None,
                  pushplus_token: str | None = None,
                  wecom_bot_key: str | None = None,
                  timeout: float = 30.0):
+        self.wxpusher_spt = (wxpusher_spt
+                             or os.getenv("AI_RADAR_WXPUSHER_SPT") or "")
         self.wxpusher_app_token = (wxpusher_app_token
                                    or os.getenv("AI_RADAR_WXPUSHER_APP_TOKEN") or "")
         self.wxpusher_uid = (wxpusher_uid
@@ -90,6 +92,8 @@ class Notifier:
     @property
     def available_channels(self) -> list[str]:
         chs = []
+        if self.wxpusher_spt:
+            chs.append("wxpusher_spt")
         if self.wxpusher_app_token and self.wxpusher_uid:
             chs.append("wxpusher")
         if self.serverchan_key:
@@ -113,6 +117,8 @@ class Notifier:
             return [NotifyResult(ok=False, channel="none",
                                  error="no channel configured")]
         body = markdown
+        if "wxpusher_spt" in self.available_channels:
+            results.append(self._push_wxpusher_spt(title, body))
         if "wxpusher" in self.available_channels:
             results.append(self._push_wxpusher(title, body))
         if "serverchan" in self.available_channels:
@@ -124,6 +130,29 @@ class Notifier:
         ok_n = sum(1 for r in results if r.ok)
         log.info("notifier: pushed via %d/%d channels", ok_n, len(results))
         return results
+
+    # ---------- WxPusher SPT 极简推送 ----------
+    def _push_wxpusher_spt(self, title: str, markdown: str) -> NotifyResult:
+        # 文档: https://wxpusher.zjiecode.com/docs/#/?id=spt
+        # SPT 极简推送接口，无需 appToken/uid 配对，扫码拿 SPT 即可
+        url = "https://wxpusher.zjiecode.com/api/send/message/simple-push"
+        summary = (title or "AI Radar")[:21]
+        payload = {
+            "spt": self.wxpusher_spt,
+            "content": markdown,
+            "summary": summary,
+            "contentType": 3,   # markdown
+        }
+        try:
+            with httpx.Client(timeout=self.timeout) as c:
+                r = c.post(url, json=payload)
+                data = r.json()
+                if data.get("code") == 1000:
+                    return NotifyResult(ok=True, channel="wxpusher_spt")
+                return NotifyResult(ok=False, channel="wxpusher_spt",
+                                    error=str(data))
+        except Exception as e:
+            return NotifyResult(ok=False, channel="wxpusher_spt", error=repr(e))
 
     # ---------- WxPusher ----------
     def _push_wxpusher(self, title: str, markdown: str) -> NotifyResult:
