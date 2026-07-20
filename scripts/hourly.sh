@@ -55,7 +55,7 @@ export no_proxy="localhost,127.0.0.1,${no_proxy:-}"
 export NO_PROXY="localhost,127.0.0.1,${NO_PROXY:-}"
 
 # 诊断输出（写到日志，便于排查 crontab 问题）
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] hourly.sh start; spt=${AI_RADAR_WXPUSHER_SPT:+set}; wxpusher_token=${AI_RADAR_WXPUSHER_APP_TOKEN:+set}; uid=${AI_RADAR_WXPUSHER_UID:+set}"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] hourly.sh start; wecom=${AI_RADAR_WECOM_BOT_KEY:+set}; spt=${AI_RADAR_WXPUSHER_SPT:+set}; wxpusher_token=${AI_RADAR_WXPUSHER_APP_TOKEN:+set}; uid=${AI_RADAR_WXPUSHER_UID:+set}"
 
 # 执行 hourly: 采集近 1 小时 -> 取未推送过的 Top10 -> LLM 摘要前 5 -> 推送 -> 标记
 exec "$PY" -m ai_radar hourly --hours 1 --top 10 --summarize 5
