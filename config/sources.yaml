@@ -118,11 +118,11 @@ rss_sources:
     authority: 0.7
     tags: ["ai"]
     lang: zh
-    enabled: false          # 原生 RSS XML 破损；改用 RSSHub，需自建实例后启用
+    enabled: false          # 需自建 RSSHub 实例后启用
 
   - name: "量子位"
     url: "https://www.qbitai.com/feed"
-    authority: 0.65
+    authority: 0.7
     tags: ["ai"]
     lang: zh
 
@@ -139,6 +139,79 @@ rss_sources:
     tags: ["ai"]
     lang: zh
     enabled: false          # SSL 异常；待确认
+
+  # ===== 国内大论坛 / 媒体 / 技术社区 =====
+  - name: "V2EX 最新"
+    url: "https://www.v2ex.com/index.xml"
+    authority: 0.5
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "InfoQ 中国"
+    url: "https://www.infoq.cn/feed"
+    authority: 0.7
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "少数派 Matrix"
+    url: "https://sspai.com/feed"
+    authority: 0.6
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "思否 SegmentFault"
+    url: "https://segmentfault.com/feeds/blogs"
+    authority: 0.55
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "美团技术团队"
+    url: "https://tech.meituan.com/atom.xml"
+    authority: 0.8
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "阮一峰博客"
+    url: "https://www.ruanyifeng.com/blog/atom.xml"
+    authority: 0.75
+    tags: ["ai"]
+    lang: zh
+
+  - name: "36氪"
+    url: "https://36kr.com/feed"
+    authority: 0.55
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "36氪快讯"
+    url: "https://36kr.com/feed-newsflash"
+    authority: 0.5
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "虎嗅"
+    url: "https://rsshub.rssforever.com/huxiu/article"
+    authority: 0.55
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "钛媒体"
+    url: "https://www.tmtpost.com/feed"
+    authority: 0.55
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "爱范儿"
+    url: "https://www.ifanr.com/feed"
+    authority: 0.5
+    tags: ["ai", "hardware"]
+    lang: zh
+
+  - name: "雷锋网"
+    url: "https://www.leiphone.com/feed/"
+    authority: 0.7
+    tags: ["ai", "hardware"]
+    lang: zh
 
   - name: "Chips and Cheese"
     url: "https://chipsandcheese.com/feed/"

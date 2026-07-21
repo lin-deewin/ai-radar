@@ -28,7 +28,9 @@ def fetch(url: str, *,
           backoff: float = 1.5) -> FetchResult:
     """带重试的同步 HTTP GET。遵守 arXiv 建议：3 秒间隔、失败退避。"""
     base_headers = {
-        "User-Agent": "AI-Radar/0.1 (research aggregator; +https://github.com/local)"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                      "AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/124.0 Safari/537.36 AI-Radar/0.1"
     }
     if headers:
         base_headers.update(headers)

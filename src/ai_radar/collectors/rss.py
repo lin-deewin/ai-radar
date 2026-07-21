@@ -17,11 +17,13 @@ _HN_META_RE = re.compile(r"^Article URL:.*?Points:\s*(\d+)", re.I | re.DOTALL)
 
 
 def _parse_published(entry) -> datetime | None:
+    from datetime import timezone
     for key in ("published_parsed", "updated_parsed", "created_parsed"):
         t = entry.get(key)
         if t:
             try:
-                return datetime(*t[:6], tzinfo=t.tzinfo)
+                # feedparser 返回 time.struct_time，无 tzinfo；统一按 UTC
+                return datetime(*t[:6], tzinfo=timezone.utc)
             except Exception:
                 pass
     for key in ("published", "updated", "date"):
